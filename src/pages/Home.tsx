@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useUsersQuery } from "../services/userApi";
+import { useUsersQuery, useDeleteUserMutation } from "../services/userApi";
 
 const Home = () => {
     const {data, error, isSuccess, isLoading, isFetching} = useUsersQuery();
+    const [deleteUser] = useDeleteUserMutation();
 
     useEffect(() =>{
         if(error){
@@ -14,7 +15,8 @@ const Home = () => {
 
     const handleDelete = async (id: any) => {
         if (window.confirm("Are you sure that you wanted to delete that user ?")) {
-        toast.success("Contact Deleted Successfully");
+            await deleteUser(id);
+            toast.success("Contact Deleted Successfully");
         }
     };
     return (

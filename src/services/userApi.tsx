@@ -7,29 +7,45 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    users: builder.query<User[], void>({
-        query: () => `/users`,
-        providesTags: ["User"]
-    }),
 
-    addUser: builder.mutation<{}, User>({
-      query: (user) => ({
-          url: `/user`,
-          method: "POST",
-          body: user,
+      users: builder.query<User[], void>({
+        query: () => `/user`,
+        providesTags: ["User"]
       }),
-      invalidatesTags: ["User"],
-  }),
-  deleteUser: builder.mutation<void, string>({
-    query: (id) => ({
-        url: `/user/${id}`,
-        method: "POST",
+
+      user: builder.query<User, string>({
+        query: (id) => `/user/${id}`,
+        providesTags: ["User"]
+      }),
+
+      addUser: builder.mutation<{}, User>({
+        query: (user) => ({
+            url: `/user`,
+            method: "POST",
+            body: user,
+        }),
+        invalidatesTags: ["User"],
+      }),
+
+      deleteUser: builder.mutation<void, string>({
+        query: (id) => ({
+            url: `/user/${id}`,
+            method: "DELETE",
+        }),
+        invalidatesTags: ["User"],
+      }),
+
+      updateUser: builder.mutation<void, User>({
+        query: ({id, ...rest}) => ({
+            url: `/user/${id}`,
+            method: "PUT",
+            body: rest,
+        }),
+        invalidatesTags: ["User"],
     }),
-    invalidatesTags: ["User"],
-  }),
 
   }),
 })
 
 
-export const { useUsersQuery, useAddUserMutation, useDeleteUserMutation } = userApi
+export const { useUsersQuery, useAddUserMutation, useDeleteUserMutation, useUserQuery, useUpdateUserMutation } = userApi
