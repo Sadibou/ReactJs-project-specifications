@@ -10,21 +10,16 @@ const initialState = {
 };
 
 const AddEditUser = () => {
-  const [formValue, setFormValue] = useState(initialState);
-  const [editMode, setEditMode] = useState(false);
-  const [addUser] = useAddUserMutation();
-  const [updateUser] = useUpdateUserMutation();
-  const { name, email } = formValue;
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const {data, error, isSuccess, isLoading, isFetching} = useUserQuery(id!);
+    const [formValue, setFormValue] = useState(initialState);
+    const [editMode, setEditMode] = useState(false);
+    const [addUser] = useAddUserMutation();
+    const [updateUser] = useUpdateUserMutation();
+    const { name, email } = formValue;
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const {data, error, isSuccess, isLoading, isFetching} = useUserQuery(id!);
 
-    useEffect(() =>{
-        if(error){
-            toast.error("Something went wrong");
-        }
-    }, [error])
-
+    
     useEffect(() => {
         if (id) {
         setEditMode(true);
@@ -48,6 +43,7 @@ const AddEditUser = () => {
             navigate("/");
             toast.success("User Added Successfully");
         } else {
+            await updateUser(formValue);
             navigate("/");
             setEditMode(false);
             toast.success("User Updated Successfully");
@@ -60,37 +56,30 @@ const AddEditUser = () => {
         setFormValue({ ...formValue, [name]: value });
     };
     return (
-        <div style={{ marginTop: "100px" }}>
-        <form
-            style={{
-            margin: "auto",
-            padding: "15px",
-            maxWidth: "400px",
-            alignContent: "center",
-            }}
-            onSubmit={handleSubmit}>
+        <div>
+            <form onSubmit={handleSubmit}>
 
-            <label htmlFor="name">Name</label>
-            <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Your Name..."
-            value={name || ""}
-            onChange={handleInputChange}
-            />
-            <label htmlFor="email">Email</label>
-            <input
-            type="text"
-            id="email"
-            name="email"
-            placeholder="Your Email..."
-            value={email || ""}
-            onChange={handleInputChange}
-            />
-        
-            <input type="submit" value={id ? "Update" : "Save"} />
-        </form>
+                <label htmlFor="name">Name</label>
+                    <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Your Name..."
+                    value={name || ""}
+                    onChange={handleInputChange}
+                    />
+                <label htmlFor="email">Email</label>
+                    <input
+                    type="text"
+                    id="email"
+                    name="email"
+                    placeholder="Your Email..."
+                    value={email || ""}
+                    onChange={handleInputChange}
+                    />
+            
+                <input type="submit" value={id ? "Update" : "Save"} />
+            </form>
         </div>
     );
 };
