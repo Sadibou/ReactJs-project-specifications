@@ -4,22 +4,32 @@ import { User } from '../models/user.model';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+  tagTypes: ["User"],
   endpoints: (builder) => ({
     users: builder.query<User[], void>({
-        query: () => "/users",
+        query: () => `/users`,
+        providesTags: ["User"]
     }),
 
     addUser: builder.mutation<{}, User>({
-        query: (user) => ({
-            url: "/users",
-            method: "POST",
-            body: user,
-        })   
-    })
+      query: (user) => ({
+          url: `/user`,
+          method: "POST",
+          body: user,
+      }),
+      invalidatesTags: ["User"],
+  }),
+  deleteUser: builder.mutation<void, string>({
+    query: (id) => ({
+        url: `/user/${id}`,
+        method: "POST",
+    }),
+    invalidatesTags: ["User"],
+  }),
 
   }),
 })
 
 
-export const { useUsersQuery } = userApi
+export const { useUsersQuery, useAddUserMutation, useDeleteUserMutation } = userApi
